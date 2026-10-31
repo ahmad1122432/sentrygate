@@ -1,0 +1,13 @@
+{
+  "direct (no gateway)": {
+    "mean_ms": 3.59,
+    "median_ms": 3.49,
+    "p95_ms": 4.99
+  },
+  "through SentryGate": {
+    "mean_ms": 19.55,
+    "median_ms": 18.38,
+    "p95_ms": 25.17
+  },
+  "overhead_ms": 15.96
+}

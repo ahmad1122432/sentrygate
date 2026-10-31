@@ -1,0 +1,220 @@
+{
+  "legit": [
+    {
+      "request": "GET /",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /api/products?id=1",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /api/products?id=2",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=leather+wallet",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /api/users/5",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "POST /login",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=men%27s+belt+and+wallet+set",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=black+or+brown+wallet",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=union+station+tickets",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=select+a+size",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=dads%27+%231+gift",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=2+and+2%3D4",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=sleep+mask",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=how+to+use+javascript",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=cat+hoodie",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=50%25+off+%26+free+shipping",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=leather+belt%2C+size%3D34",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=price%3C20",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=ls+-l+shoes",
+      "status": 200,
+      "false_positive": false
+    },
+    {
+      "request": "GET /search?q=onload+time",
+      "status": 200,
+      "false_positive": false
+    }
+  ],
+  "attacks": [
+    {
+      "category": "SQLi",
+      "name": "UNION SELECT",
+      "blocked": true
+    },
+    {
+      "category": "SQLi",
+      "name": "tautology",
+      "blocked": true
+    },
+    {
+      "category": "SQLi",
+      "name": "quoted tautology",
+      "blocked": true
+    },
+    {
+      "category": "SQLi",
+      "name": "comment bypass",
+      "blocked": true
+    },
+    {
+      "category": "SQLi",
+      "name": "double-encoded",
+      "blocked": true
+    },
+    {
+      "category": "SQLi",
+      "name": "time based",
+      "blocked": true
+    },
+    {
+      "category": "SQLi",
+      "name": "login comment",
+      "blocked": true
+    },
+    {
+      "category": "XSS",
+      "name": "script tag",
+      "blocked": true
+    },
+    {
+      "category": "XSS",
+      "name": "encoded script",
+      "blocked": true
+    },
+    {
+      "category": "XSS",
+      "name": "event handler",
+      "blocked": true
+    },
+    {
+      "category": "XSS",
+      "name": "javascript: URI",
+      "blocked": true
+    },
+    {
+      "category": "XSS",
+      "name": "svg onload",
+      "blocked": true
+    },
+    {
+      "category": "Traversal",
+      "name": "../ sequence",
+      "blocked": true
+    },
+    {
+      "category": "Traversal",
+      "name": "encoded ../",
+      "blocked": true
+    },
+    {
+      "category": "Traversal",
+      "name": "win.ini",
+      "blocked": true
+    },
+    {
+      "category": "CmdInj",
+      "name": "; cat",
+      "blocked": true
+    },
+    {
+      "category": "CmdInj",
+      "name": "| whoami",
+      "blocked": true
+    },
+    {
+      "category": "CmdInj",
+      "name": "&& id",
+      "blocked": true
+    },
+    {
+      "category": "CmdInj",
+      "name": "$(...)",
+      "blocked": true
+    }
+  ],
+  "behaviour": {
+    "bola": true,
+    "brute_force": true,
+    "rate_limit": true
+  },
+  "summary": {
+    "detected": 22,
+    "total_attacks": 22,
+    "detection_rate": 1.0,
+    "false_positives": 0,
+    "legit_total": 20,
+    "fp_rate": 0.0,
+    "by_category": {
+      "SQLi": "7/7",
+      "XSS": "5/5",
+      "Traversal": "3/3",
+      "CmdInj": "4/4"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+# Lab only: the vulnerable demo app stays on the internal network; only SentryGate is published (localhost).
+services:
+  backend:
+    build: { context: ., dockerfile: Dockerfile.backend }
+    expose: ["9000"]
+  sentrygate:
+    build: .
+    depends_on: [backend]
+    environment:
+      BACKEND_URL: http://backend:9000
+      SENTRY_MODE: block          # block | monitor
+      SENTRY_TOKEN: change-me     # dashboard: http://127.0.0.1:8080/_sentry/?token=change-me
+    volumes: ["sentry-data:/data"]
+    ports: ["127.0.0.1:8080:8080"]
+volumes:
+  sentry-data:

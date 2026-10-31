@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SentryGate Dashboard</title>
+<style>
+:root{--bg:#f6f7f9;--fg:#1c1f24;--card:#fff;--bd:#dde1e6;--mut:#6a7280}
+@media(prefers-color-scheme:dark){:root{--bg:#14161a;--fg:#e8eaed;--card:#1d2026;--bd:#2d323a;--mut:#9aa3af}}
+body{margin:0;font:14px system-ui,sans-serif;background:var(--bg);color:var(--fg);padding:20px}
+h1{font-size:20px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px}
+.card b{display:block;font-size:24px}.card span,.mut{color:var(--mut);font-size:12px}
+.wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--bd);border-radius:10px}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}th{color:var(--mut);font-weight:500}
+.blocked{color:#d33;font-weight:600}.monitored{color:#c80;font-weight:600}.flagged{color:#a80}.allowed{color:#2a8}
+ul{margin:6px 0 0;padding-left:18px}
+</style></head><body>
+<h1>SentryGate <span class="mut" id="mode"></span></h1>
+<div class="grid">
+ <div class="card"><span>Total requests</span><b id="total">0</b></div>
+ <div class="card"><span>Blocked</span><b id="blocked">0</b></div>
+ <div class="card"><span>Monitored (would block)</span><b id="monitored">0</b></div>
+ <div class="card"><span>Allowed</span><b id="allowed">0</b></div>
+ <div class="card"><span>Top rules</span><ul id="rules"></ul></div>
+ <div class="card"><span>Top attacked paths</span><ul id="paths"></ul></div>
+ <div class="card"><span>Top source IPs</span><ul id="ips"></ul></div>
+</div>
+<label><input type="checkbox" id="only"> show threats only</label>
+<div class="wrap"><table><thead><tr><th>Time</th><th>IP</th><th>Method</th><th>Path</th><th>Action</th><th>Rule</th><th>OWASP</th><th>Sev</th><th>Score</th><th>Evidence</th></tr></thead><tbody id="rows"></tbody></table></div>
+<script>
+// All values are inserted with textContent: log data is attacker-controlled.
+const tok=new URLSearchParams(location.search).get("token"),q=tok?"token="+encodeURIComponent(tok):"";
+const $=id=>document.getElementById(id);
+function fill(ul,items,f){ul.replaceChildren();items.forEach(i=>{const li=document.createElement("li");li.textContent=f(i);ul.appendChild(li)})}
+async function tick(){
+ const th=$("only").checked?"threats=true":"";
+ const [s,e]=await Promise.all([fetch("/_sentry/api/stats?"+q).then(r=>r.json()),fetch("/_sentry/api/events?"+[q,th].filter(Boolean).join("&")).then(r=>r.json())]);
+ const a=s.by_action;$("mode").textContent="mode: "+s.mode;$("total").textContent=s.total;
+ $("blocked").textContent=a.blocked||0;$("monitored").textContent=a.monitored||0;$("allowed").textContent=a.allowed||0;
+ fill($("rules"),s.top_rules,r=>`${r.rule_id} (${r.c})`);fill($("paths"),s.top_paths,r=>`${r.path} (${r.c})`);fill($("ips"),s.top_ips,r=>`${r.ip} (${r.c})`);
+ const tb=$("rows");tb.replaceChildren();
+ e.forEach(ev=>{const tr=document.createElement("tr");
+  [new Date(ev.ts*1000).toLocaleTimeString(),ev.ip,ev.method,ev.path,ev.action,ev.rule_id||"-",ev.owasp||"-",ev.severity||"-",ev.score,ev.detail||""].forEach((v,i)=>{
+   const td=document.createElement("td");td.textContent=v;if(i===4)td.className=ev.action;tr.appendChild(td)});tb.appendChild(tr)});
+}
+tick();setInterval(tick,3000);$("only").onchange=tick;
+</script></body></html>
